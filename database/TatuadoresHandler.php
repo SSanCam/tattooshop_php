@@ -4,13 +4,6 @@
     // Cargamos el manejo de la base de datos
     require_once 'DBHandler.php';
 
-    // Configuración de los datos de conexión
-    $hostname = "localhost";
-    $usuario = "root";
-    $contrasena = "root"; 
-    $base_de_datos = "tattooshop";
-    $port = 3306;
-
     // Creamos la conexión
     $db = new DBHandler($hostname, $usuario, $contrasena, $base_de_datos, $port);
     $conexion = $db->conectar();
