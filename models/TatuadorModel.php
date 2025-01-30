@@ -9,6 +9,7 @@ class TatuadorModel{
     private $conexion;
 
     private function conectar() {
+
         $this->dbHandler = new DBHandler();
         $this->conexion = $this->dbHandler->conectar();
     }
