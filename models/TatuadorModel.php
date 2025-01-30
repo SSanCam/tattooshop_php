@@ -2,19 +2,22 @@
 
 require_once './database/DBHandler.php';
 
+
 class TatuadorModel{
 
     // Instanciamos la conexion a la base de datos
-    private $dbHandler; 
+    private $dbHandler;
     private $conexion;
 
-    private function conectar() {
+
+    private function conectar(){
 
         $this->dbHandler = new DBHandler();
         $this->conexion = $this->dbHandler->conectar();
     }
-    private function desconectar() {
-        $this-> conexion = $this->dbHandler->desconectar();
+    private function desconectar()
+    {
+        $this->conexion = $this->dbHandler ->desconectar();
     }
     // CRUD de tatuadores
     // Se crea un nuevo registro en la tabla de tatuadores
@@ -58,7 +61,7 @@ class TatuadorModel{
     // Devuelve una  lista con la info. de todos los tatuadores
     function getAllTatuadores(): array
     {
-        $tatuadores  = array();
+        $tatuadores = array();
         return $tatuadores;
     }
 }
