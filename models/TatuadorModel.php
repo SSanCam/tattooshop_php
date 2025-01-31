@@ -1,96 +1,82 @@
 <?php
 
-require_once __DIR__ . '/../database/DBHandler.php';
+require_once './database/DBHandler.php';
 
-class TatuadorModel {
+class TatuadorModel
+{
 
-    private $dbHandler;
-    private $conexion;
+    private $nombreTabla = "tatuadores"; // NOMBRE DE LA TABLA DE LA BASE DE DATOS
+    private $conexion;              // ATRIBUTO QUE ALMACENARÁ LA CONEXIÓN A LA BASE DE DATOS
+    private $database;             // ATRIBUTO QUE ALMACENA LA INSTANCIA DE DBHAndler
 
-    public function __construct() {
+    public function __construct()
+    {
         // Conectamos una sola vez al instanciar el modelo
-        $this->dbHandler = new DBHandler(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
-        $this->conexion = $this->dbHandler->conectar();
+        $this->database = new DBHandler("localhost","root","","tattooshop","3306");
+        $this->conexion = $this->database->conectar();
     }
-    public function __destruct() {
-        // Cerramos la conexión al destruir el objeto
-        $this->dbHandler->desconectar();
-    }
+
     // Método para insertar un nuevo tatuador en la base de datos
-    public function insertTatuador(string $nombre, string $email, string $password, ?string $foto): bool {
-        $foto = $foto ?? '../public/images/perfil.jpeg'; // Foto predeterminada si es NULL
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        $sql = "INSERT INTO tatuadores (nombre, email, password, foto) VALUES (?, ?, ?, ?)";
+    public function insertTatuador($nombre, $email)
+    {
+        $sql = "INSERT INTO $this->nombreTabla (nombre, email) VALUES (?, ?)";
         $stmt = $this->conexion->prepare($sql);
+        $stmt->bind_param("ss", $nombre, $email);
 
-        if ($stmt) {
-            $stmt->bind_param("ssss", $nombre, $email, $hashedPassword, $foto);
-            $resultado = $stmt->execute();
-            $stmt->close();
-            $this->dbHandler->desconectar();
-            return $resultado;
-        }
-        return false;
+        return $stmt->execute();
     }
 
     // Obtiene la info de un tatuador por su ID
-    public function getTatuador($id) {
+    public function getTatuador($id)
+    {
+        $this->conexion = $this->database->conectar();
 
         $sql = "SELECT nombre, email, foto FROM tatuadores WHERE id = ?";
         $stmt = $this->conexion->prepare($sql);
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $resultado = $stmt->get_result();
-        $stmt->close();
-
-        return $resultado->fetch_assoc(); // Devuelve un array asociativo con la info del tatuador
+        // Devuelve un array asociativo con la info del tatuador
+        return $resultado->fetch_assoc();
     }
 
     // Actualiza la información de un tatuador
-    public function updateTatuador($id, $nombre, $email, $password, $foto): bool {
-
+    public function updateTatuador($id, $nombre, $email)
+    {
         // Consulta para actualizar solo los campos permitidos
-        $sql = "UPDATE tatuadores SET nombre = ?, email = ?, password = ?, foto = ? WHERE id = ?";
+        $sql = "UPDATE $this->nombreTabla SET nombre = ?, email = ? WHERE id = ?";
         $stmt = $this->conexion->prepare($sql);
-
-        if ($stmt) {
-            $stmt->bind_param("ssssi", $nombre, $email, $password, $foto, $id);
-            $resultado = $stmt->execute();
-            $stmt->close();
-            $this->dbHandler->desconectar();
-            return $resultado;
-        }
-        return false;
+        $stmt->bind_param("ssi", $nombre, $email, $id);
+        return $stmt->execute();
     }
 
     // Elimina un tatuador de la base de datos
-    public function deleteTatuador($id): bool {
-
-        $sql = "DELETE FROM tatuadores WHERE id = ?";
+    public function deleteTatuador($id)
+    {
+        $sql = "DELETE FROM $this->nombreTabla WHERE id = ?";
         $stmt = $this->conexion->prepare($sql);
-
-        if ($stmt) {
-            $stmt->bind_param("i", $id);
-            $resultado = $stmt->execute();
-            $stmt->close();
-            return $resultado;
-        }
-        return false;
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
     }
 
     // Obtiene una lista con todos los tatuadores (solo nombre y email)
-    public function getAllTatuadores(): array {
-
-        $sql = "SELECT nombre, email, foto FROM tatuadores";
+    public function getAllTatuadores(): array
+    {
+        $sql = "SELECT id, nombre, email FROM $this->nombreTabla";
         $resultado = $this->conexion->query($sql);
-
         $tatuadores = [];
+
         while ($fila = $resultado->fetch_assoc()) {
             $tatuadores[] = $fila;
         }
+
         return $tatuadores;
     }
 
+    public function cerrarConecxion()
+    {
+        $this->database->desconectar();
+    }
 }
+
 ?>

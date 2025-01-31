@@ -20,13 +20,13 @@ class TatuadorController
     }
 
     // Método para insertar un nuevo tatuador en la base de datos
-    public function createTatuador($datos)
+    public function insertTatuador($datos = [])
     {
         // Se almacenan los datos del formulario
         $nombre = trim($datos["nombre"] ?? "");
         $email = trim($datos["email"] ?? "");
         $password = trim($datos["password"] ?? "");
-        $foto = null;
+        $foto = $_FILES["foto"] ?? null;
 
         // Se comprueba si los datos del formulario son correctos
         $errores = [];
@@ -41,18 +41,6 @@ class TatuadorController
 
         if ($password == "") {
             $errores["error_password"] = "La contraseña es obligatoria.";
-        }
-
-        // **Manejo de la imagen dentro de $datos**
-        if (isset($datos["foto"]) && $datos["foto"]["error"] === UPLOAD_ERR_OK) {
-            $urlImage = time() . "_" . basename($datos["foto"]["name"]);
-            $rutaDestino = "./public/images/tatuadores/" . $urlImage;
-
-            if (move_uploaded_file($datos["foto"]["tmp_name"], $rutaDestino)) {
-                $foto = $rutaDestino;
-            } else {
-                $errores["error_foto"] = "Error al subir la imagen.";
-            }
         }
 
         // **Si no se subió una imagen, asignar la predeterminada**
@@ -70,10 +58,10 @@ class TatuadorController
         $password = password_hash($password, PASSWORD_DEFAULT);
 
         // Insertamos en la base de datos
-        $operacionExitosa = $this->tatuadorModel->insertTatuador($nombre, $email, $password, $foto);
+        $resultado = $this->tatuadorModel->insertTatuador($nombre, $email);
 
         // **Si la operación es exitosa, mostramos la vista de éxito**
-        if ($operacionExitosa) {
+        if ($resultado) {
             require_once "./views/tatuadorViews/TatuadorAltaCorrectaView.php";
         } else {
             $errores["error_general"] = "Error al registrar el tatuador.";

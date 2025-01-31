@@ -72,60 +72,30 @@ La disposición de los elementos no es importante, lo único importante es que a
 
 --- 
 
-### **CitaModel.php** 
+### **Tablas de entidades**
 
-Se ha modificado el método insert, ya que hemos agregado un id autoincremental, por lo que no necesitamos agregarlo manualmente.
+* #### Tatuadores :
 
-### **Tabla de entidades**
-
-Se ha implementado código para crear las tablas de forma automática.
-
-#### Tatuadores
-
-
-```php
-<?php
-    require_once 'DBHandler.php';
-    $db = new DBHandler(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
-    $conexion = $db->conectar();
-    $sql = "CREATE TABLE IF NOT EXISTS tatuadores (
+```sql
+CREATE TABLE tatuadores (
             id INT AUTO_INCREMENT PRIMARY KEY,
             nombre VARCHAR(100) NOT NULL,
             email VARCHAR(150) NOT NULL UNIQUE,
             password VARCHAR(255) NOT NULL,
             foto VARCHAR(255),
             creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )";
-    if ($conexion->query($sql) === TRUE) {
-        echo "Tabla 'tatuadores' creada o ya existente.";
-    } else {
-        echo "Error al crear la tabla 'tatuadores': {$conexion->error}" ;
-    }
-    $db->desconectar();
-?>
+        )
 ```
 
+* #### Citas :
 
-#### Citas
-
-```php
-<?php
-    require_once 'DBHandler.php';
-    $db = new DBHandler(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
-    $conexion = $db->conectar();
-    $sql = "CREATE TABLE IF NOT EXISTS citas (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            descripcion TEXT NOT NULL,
-            fechaCita DATETIME NOT NULL,
-            cliente VARCHAR(100) NOT NULL,
-            tatuador INT NOT NULL,
-            FOREIGN KEY (tatuador) REFERENCES tatuadores(id) ON DELETE CASCADE
-        )";
-    if ($conexion->query($sql) === TRUE) {
-        echo "Tabla 'citas' creada o ya existente.";
-    } else {
-        echo "Error al crear la tabla 'citas': {$conexion->error}" ;
-    }
-    $db->desconectar();
-?>
+```sql
+CREATE TABLE citas (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        descripcion TEXT NOT NULL,
+        fechaCita DATETIME NOT NULL,
+        cliente VARCHAR(100) NOT NULL,
+        tatuador INT NOT NULL,
+        FOREIGN KEY (tatuador) REFERENCES tatuadores(id) ON DELETE CASCADE
+    )
 ```

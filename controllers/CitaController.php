@@ -9,6 +9,7 @@
         En este caso tenemos CitaModel -> Para poder acceder a la Base de Datos
         */
         private $citaModel;
+        private $tatuadorModel;
 
         /*
         CONSTRUCTOR DE CLASE
@@ -17,12 +18,18 @@
         */
         public function __construct() {
             $this->citaModel = new CitaModel();
+            $this->tatuadorModel = new TatuadorModel();
         }
 
         /**
          * Método para mostrar el view de AltaCita -> Contiene la página para dar de alta una cita
          */
         public function showAltaCita($errores = []) {
+            // Instanciamos TatuadorMdoel
+            $citas = $this->citaModel->leerCitas();
+            // Llamamos al método que obtiene la lista de todos los tatuadores
+            // Cargamos la vista del formulario de alta de citas,
+            // pasando los tatuadores y posibles errores
             require_once "./views/citasViews/AltaCitaView.php";
         }
 
@@ -43,19 +50,15 @@
                 if($input_id == "") {
                     $errores["error_id"] = "El campo id es obligatorio";
                 }
-
                 if($input_descripcion == "") {
                     $errores["error_descripcion"] = "El campo descripcion es obligatorio";
                 }
-
                 if($input_fecha_cita == "") {
                     $errores["error_fechaCita"] = "La fecha de la cita es obligatoria";
                 }
-                
                 if($input_cliente == "") {
                     $errores["error_cliente"] = "El campo cliente  es obligatorio";
                 }
-
                 if($input_tatuador == "") {
                     $errores["error_tatuador"] = "El campo tatuador es obligatorio";
                 }
@@ -76,6 +79,9 @@
 
 
                 if($operacionExitosa) {
+                    $tatuadorModel = new TatuadorModel();
+                    $tatuadorInfo = $tatuadorModel -> getTatuador($input_tatuador);
+
                     // LLAMAR A UNA PÁGINA QUE MUESTRE UN MENSAJE DE ÉXITO
                     require_once "./views/citasViews/AltaCitaCorrectaView.php";
                 } else {
@@ -87,7 +93,6 @@
             }
 
         }
-
 
     }
 

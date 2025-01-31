@@ -4,7 +4,7 @@
     class CitaModel {
         private $nombreTabla = "citas"; // NOMBRE DE LA TABLA DE LA BASE DE DATOS
         private $conexion;              // ATRIBUTO QUE ALMACENARÁ LA CONEXIÓN A LA BASE DE DATOS
-        private $dbHandler;             // ATRIBUTO QUE ALMACENA LA INSTANCIA DE DBHAndler
+        private $database;             // ATRIBUTO QUE ALMACENA LA INSTANCIA DE DBHAndler
 
         public function __construct() {
             // CONECTARSE A LA BASE DE DATOS
@@ -18,7 +18,7 @@
             Inicializamos un objeto DBHandler (el de la clase que hemos construído) que va a ser
             el encargado de conectar y desconectar la base de datos
             */
-            $this->dbHandler = new DBHandler("localhost","root","","tattoos_bd","3306");
+            $this->database = new DBHandler("localhost","root","","tattooshop","3306");
         }
         /**
          * MÉTODO PARA INSERTAR UNA CITA EN LA BASE DE DATOS
@@ -29,7 +29,7 @@
          * @param mixed $tatuador
          * @return bool
          */
-        public function insertCita($id, $descripcion, $fechaCita, $cliente, $tatuador) {
+        public function insertCita($descripcion, $fechaCita, $cliente, $tatuador) {
 
             // INSERTAR EN LA BASE DE DATOS
             /*
@@ -39,7 +39,7 @@
                 c) Realizamos un prepared statement -> Las s corresponden a la posición de la ? y al tipo de dato de la ?
             */
             // a) Usamos el método conectar() que hemos hecho para obtener la conexión a la BD
-            $this->conexion = $this->dbHandler->conectar();
+            $this->conexion = $this->database->conectar();
             // b) Escribimos una sentencia SQL tal cual, poniendo ? por cada columna de la tabla de la BD
             $sql = "INSERT INTO $this->nombreTabla (descripcion, fechaCita, cliente, tatuador) VALUES (?, ?, ?, ?, ?)";
             // c.1) Realizamos un prepared statement con el método .prepare() del objeto $this->conexion
@@ -60,8 +60,20 @@
             } catch(Exception $e) {
                 return false;
             } finally {
-                $this->dbHandler->desconectar(); // USAMOS FINALLY PARA ASEGURARNOS QUE HEMOS CERRADO LA CONEXIÓN A LA BASE DE DATOS
+                $this->database->desconectar(); // USAMOS FINALLY PARA ASEGURARNOS QUE HEMOS CERRADO LA CONEXIÓN A LA BASE DE DATOS
             }
+        }
+
+        public function leerCitas() { // getAllCitas
+            $sql = "SELECT * FROM $this->nombreTabla";
+            $resultado = $this->conexion->query($sql);
+            $citas = [];
+
+            while ($fila = $resultado->fetch_assoc()) {
+                $citas[] = $fila;
+            }
+
+            return $citas;
         }
     }
 

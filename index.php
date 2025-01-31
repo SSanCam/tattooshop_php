@@ -19,6 +19,7 @@
 
     // QUIERO OBTENER LA URL DE LA PETICIÓN
     $requestUri = $_SERVER["REQUEST_URI"] ?? "";
+    $requestMethod = $_SERVER["REQUEST_METHOD"] ?? "";
 
     // QUEREMOS LLAMAR A UN CONTROLLER U OTRO DEPENDIENDO DE LA $REQUESTURI
     switch ($requestUri) {
@@ -33,8 +34,16 @@
                 $datos = $_POST ?? [];
                 $citaController->insertCita($datos);
             }
-
-            
+            break;
+            // Alta de tatuadores
+        case "/tattooshop_php/tatuadores/alta":
+            if( $requestMethod == "GET"){
+                $tatuadorController = new TatuadorController();
+                $tatuadorController->showAltaTatuador();
+            } elseif ($requestMethod == "POST") {
+                $datos = $_POST ?? [];
+                $tatuadorController->insertTatuador($datos); // Insertar tatuador
+            }
             break;
         // caso por defecto -> llamamos a 404
         default:

@@ -1,6 +1,5 @@
 <?php
     // Carga la configuracion de la base de datos
-    require_once __DIR__ . '/config.php';
     class DBHandler {
 
         // ATRIBUTOS DE CLASE PARA CONECTARNOS A LA BASE DE DATOS
@@ -43,12 +42,6 @@
                 die("Error interno de la aplicación: ". $e->getMessage());
             }
         }
-
-        private function crearTablas() {
-            require_once __DIR__ . '/TatuadoresHandler.php';
-            require_once __DIR__ . '/CitaHandler.php';
-        }
-        
         // Método para desconectar de la base de datos
         public function desconectar()    {
             if ($this->conexion) {

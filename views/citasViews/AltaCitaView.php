@@ -59,7 +59,7 @@
                 </div>
                 <div class="form-group">
                     <label class="fw-lighter text-lowercase text-white" for="input_tatuador">Nombre tatuador</label>
-                    <input type="text"
+                    <select type="text"
                         class="shadow form-control "
                         id="input_tatuador"
                         name="input_tatuador"
