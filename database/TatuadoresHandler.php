@@ -6,7 +6,7 @@
     require_once 'DBHandler.php';
 
     // Creamos la conexión
-    $db = new DBHandler($hostname, $usuario, $contrasena, $base_de_datos, $port);
+    $db = new DBHandler(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
     $conexion = $db->conectar();
 
     // Definimos la estructura de la tabla 'tatuadores' si no existe

@@ -12,7 +12,7 @@
     - Maneja la lógica de enrutar las solicitudes al controlador correspondiente.
     - Es minimalista y delega todas las responsabilidades importantes a las capas lógicas del patrón MVC.
     */
-   
+
     // Cargamos los controladores que necesitamos.
     require_once "./controllers/CitaController.php";
 
