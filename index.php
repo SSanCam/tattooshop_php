@@ -15,6 +15,7 @@
 
     // Cargamos los controladores que necesitamos.
     require_once "./controllers/CitaController.php";
+    require_once './controllers/TatuadorController.php';
 
     // QUIERO OBTENER LA URL DE LA PETICIÓN
     $requestUri = $_SERVER["REQUEST_URI"] ?? "";

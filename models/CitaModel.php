@@ -41,12 +41,12 @@
             // a) Usamos el método conectar() que hemos hecho para obtener la conexión a la BD
             $this->conexion = $this->dbHandler->conectar();
             // b) Escribimos una sentencia SQL tal cual, poniendo ? por cada columna de la tabla de la BD
-            $sql = "INSERT INTO $this->nombreTabla (id, descripcion, fechaCita, cliente, tatuador) VALUES (?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO $this->nombreTabla (descripcion, fechaCita, cliente, tatuador) VALUES (?, ?, ?, ?, ?)";
             // c.1) Realizamos un prepared statement con el método .prepare() del objeto $this->conexion
             $stmt = $this->conexion->prepare($sql);
             // c.2) Intercambiamos las interrogaciones por nuestros valores. Cada s corresponde a una ?, y con la s le decimos que se trata de un string
             // s -> string, d -> double/float, i -> integer
-            $stmt-> bind_param("sssss", $id, $descripcion, $fechaCita, $cliente, $tatuador); // "bindear"/unir cada parámetro a su interrogación. "qué tipo de datos vamos a intercambiar", "los datos en sí"
+            $stmt-> bind_param("ssss", $descripcion, $fechaCita, $cliente, $tatuador); // "bindear"/unir cada parámetro a su interrogación. "qué tipo de datos vamos a intercambiar", "los datos en sí"
 
             /*
             3º EJECUTAR LA SENTENCIA SQL

@@ -2,7 +2,6 @@
 
 <?php
     // Cargamos la configuración de la base de datos
-    require_once __DIR__ . '/../config/config.php'; 
     require_once 'DBHandler.php';
 
     // Creamos la conexión
