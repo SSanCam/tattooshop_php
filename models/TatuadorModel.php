@@ -1,7 +1,7 @@
 <?php
 
-require_once './database/DBHandler.php';
-require_once __DIR__ . '/../config/config.php'; // Asegurar que config.php está cargado
+require_once './database/DBHandler.php'; 
+require_once __DIR__ . '../config/config.php'; 
 
 class TatuadorModel {
 
@@ -11,11 +11,17 @@ class TatuadorModel {
     public function __construct() {
         // Conectamos con la base de datos usando los datos de config.php
         $this->dbHandler = new DBHandler(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
+        $this->conexion = $this->dbHandler->conectar();
     }
 
+    public function __destruct() {
+        $this->dbHandler->desconectar();
+    }
+    
     // Método para insertar un nuevo tatuador en la base de datos
-    public function createTatuador(string $nombre, string $email, string $password, ?string $foto): bool {
-        $foto = $foto ?? 'default.jpg'; // Foto predeterminada si es NULL
+    public function insertTatuador(string $nombre, string $email, string $password, ?string $foto): bool {
+        
+        $foto = (!empty($foto)) ? $foto : "../public/images/perfil.jpeg"; // Foto predeterminada si es NULL
 
         $this->conexion = $this->dbHandler->conectar();
 
